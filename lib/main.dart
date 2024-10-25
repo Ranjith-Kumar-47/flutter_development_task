@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_development_task/screens/description_screen.dart';
+import 'package:flutter_development_task/screens/login_screen.dart';
 
 import 'model/media_query.dar.dart';
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: DescriptionPage(),
+      home: const LoginPage(),
     );
   }
 }

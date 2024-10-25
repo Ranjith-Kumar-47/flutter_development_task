@@ -31,7 +31,6 @@ class MeetupScreenState extends State<MeetupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenSizeConfig.init(context); // Initialize once
     return Navigator(
       onGenerateRoute: (settings) {
         Widget page;

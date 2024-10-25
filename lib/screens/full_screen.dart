@@ -9,8 +9,6 @@ class FullScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenSizeConfig.init(context); // Initialize once
-
     return Scaffold(
       appBar: AppBar(title: const Text('Fullscreen')),
       body: SafeArea(

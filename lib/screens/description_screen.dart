@@ -29,8 +29,6 @@ class _DescriptionPageState extends State<DescriptionPage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenSizeConfig.init(context); // Initialize once
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

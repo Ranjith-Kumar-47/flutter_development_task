@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../constants/string_constants.dart';
-import '../model/media_query.dar.dart';
 
 class ProjectScreen extends StatelessWidget {
   const ProjectScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ScreenSizeConfig.init(context); // Initialize once
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
