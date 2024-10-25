@@ -8,6 +8,8 @@ import 'package:flutter_development_task/global_fun.dart';
 import 'package:flutter_development_task/screens/dashboard_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../model/media_query.dar.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -24,6 +26,8 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenSizeConfig.init(context); // Initialize once
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

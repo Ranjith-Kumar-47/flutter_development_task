@@ -6,6 +6,7 @@ import 'package:flutter_development_task/model/individual_meetup_model.dart';
 import 'package:intl/intl.dart';
 
 import '../constants/string_constants.dart';
+import '../model/media_query.dar.dart';
 import '../model/top_trending_meetup.dart';
 import '../model/trending_popular_people.dart';
 import 'description_screen.dart';
@@ -20,79 +21,17 @@ class MeetupScreen extends StatefulWidget {
 class MeetupScreenState extends State<MeetupScreen> {
   int _currentIndex = 0;
   late final IndividualMeetup individualMeetup;
-  final List<String> imgList = [
-    'assets/image_one.jpg',
-    'assets/image_two.jpg',
-    'assets/image_three.jpg',
-    'assets/image_one.jpg',
-    'assets/image_two.jpg',
-    'assets/image_three.jpg',
-  ];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    List<String> slideListImage = [
-      'assets/meetup_one.jpg',
-      'assets/meetup_two.jpg',
-      'assets/member_one.jpg',
-    ];
-    List<TrendingPopularPeople> trendingPopularPeople = [
-      TrendingPopularPeople(
-          title: 'Author',
-          membersCount: 124242,
-          memberListAvatar: [
-            'assets/member_one.jpg',
-            'assets/member_two.jpg',
-            'assets/member_three.jpg',
-            'assets/member_four.jpg',
-          ],
-          memberAvatar: 'assets/member_six.jpg'),
-      TrendingPopularPeople(
-          title: 'Author',
-          membersCount: 124242,
-          memberListAvatar: [
-            'assets/member_one.jpg',
-            'assets/member_two.jpg',
-            'assets/member_three.jpg',
-            'assets/member_four.jpg',
-          ],
-          memberAvatar: 'assets/member_six.jpg'),
-      TrendingPopularPeople(
-          title: 'Author',
-          membersCount: 124242,
-          memberListAvatar: [
-            'assets/member_one.jpg',
-            'assets/member_two.jpg',
-            'assets/member_three.jpg',
-            'assets/member_four.jpg',
-          ],
-          memberAvatar: 'assets/member_six.jpg'),
-      TrendingPopularPeople(
-          title: 'Author',
-          membersCount: 124242,
-          memberListAvatar: [
-            'assets/member_one.jpg',
-            'assets/member_two.jpg',
-            'assets/member_three.jpg',
-            'assets/member_four.jpg',
-          ],
-          memberAvatar: 'assets/member_six.jpg'),
-    ];
-
-    List<TopTrendingMeetup> topTrendingMeetup = [
-      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
-      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
-      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
-      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
-      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
-    ];
-    individualMeetup = IndividualMeetup(slideList: slideListImage, trendingPopularPeople: trendingPopularPeople, topTrendingMeetup: topTrendingMeetup);
+    fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenSizeConfig.init(context); // Initialize once
     return Navigator(
       onGenerateRoute: (settings) {
         Widget page;
@@ -141,51 +80,54 @@ class MeetupScreenState extends State<MeetupScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              CarouselSlider(
-                carouselController: CarouselSliderController(),
-                options: CarouselOptions(
-                  height: MediaQuery.sizeOf(context).height * .25,
-                  enableInfiniteScroll: true,
-                  animateToClosest: true,
-                  enlargeCenterPage: true,
-                  pageSnapping: true,
-                  reverse: false,
-                  scrollPhysics: const BouncingScrollPhysics(decelerationRate: ScrollDecelerationRate.normal),
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 4),
-                  viewportFraction: 1.0,
-                  // onScrolled: (value) {
-                  // log('on scrolled $value');
-                  //   isScrolling = true;
-                  //   setState(() {});
-                  // },
-                  onPageChanged: (index, reason) {
-                    log('index: $index and reason $reason');
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                  },
-                ),
-                items: individualMeetup.slideList
-                    .map(
-                      (item) => ClipRRect(
-                        borderRadius: BorderRadius.circular(14),
-                        child: Center(
-                          child: Image.asset(
-                            item,
-                            width: MediaQuery.sizeOf(context).width,
-                            height: MediaQuery.sizeOf(context).height * .25,
-                            fit: BoxFit.cover,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: CarouselSlider(
+                  carouselController: CarouselSliderController(),
+                  options: CarouselOptions(
+                    height: ScreenSizeConfig.screenHeight * .25,
+                    enableInfiniteScroll: true,
+                    animateToClosest: true,
+                    enlargeCenterPage: true,
+                    pageSnapping: true,
+                    reverse: false,
+                    scrollPhysics: const BouncingScrollPhysics(decelerationRate: ScrollDecelerationRate.normal),
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 4),
+                    viewportFraction: 1.0,
+                    // onScrolled: (value) {
+                    // log('on scrolled $value');
+                    //   isScrolling = true;
+                    //   setState(() {});
+                    // },
+                    onPageChanged: (index, reason) {
+                      log('index: $index and reason $reason');
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    },
+                  ),
+                  items: individualMeetup.slideList
+                      .map(
+                        (item) => ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: Center(
+                            child: Image.asset(
+                              item,
+                              width: ScreenSizeConfig.screenWidth,
+                              height: ScreenSizeConfig.screenHeight * .25,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                    .toList(),
+                      )
+                      .toList(),
+                ),
               ),
               // Page Indicator
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: imgList.asMap().entries.map((entry) {
+                children: individualMeetup.slideList.asMap().entries.map((entry) {
                   return GestureDetector(
                     onTap: () => setState(() {
                       _currentIndex = entry.key;
@@ -206,7 +148,7 @@ class MeetupScreenState extends State<MeetupScreen> {
               const Text('Trending Popular People', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               SizedBox(
-                height: MediaQuery.sizeOf(context).height * .25,
+                height: ScreenSizeConfig.screenHeight * .25,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: individualMeetup.trendingPopularPeople.length,
@@ -215,7 +157,7 @@ class MeetupScreenState extends State<MeetupScreen> {
                       margin: const EdgeInsets.only(right: 15),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(border: Border.all(color: Colors.grey, width: 1, strokeAlign: BorderSide.strokeAlignInside), borderRadius: BorderRadius.circular(10)),
-                      width: MediaQuery.sizeOf(context).width * .8,
+                      width: ScreenSizeConfig.screenWidth * .8,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -226,7 +168,10 @@ class MeetupScreenState extends State<MeetupScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(individualMeetup.trendingPopularPeople.elementAt(index).title),
+                                  Text(
+                                    individualMeetup.trendingPopularPeople.elementAt(index).title,
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                  ),
                                   Text('${getFormat(individualMeetup.trendingPopularPeople.elementAt(index).membersCount)} Meetups'),
                                 ],
                               ),
@@ -273,41 +218,44 @@ class MeetupScreenState extends State<MeetupScreen> {
               const SizedBox(height: 10),
               SizedBox(
                 height: 280,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: individualMeetup.topTrendingMeetup.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed('/description'); // Navigate to description
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 12),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: SizedBox(
-                            width: MediaQuery.sizeOf(context).width * .6,
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    individualMeetup.topTrendingMeetup.elementAt(index).imageUrl,
-                                    width: double.infinity,
-                                    height: 200,
-                                    fit: BoxFit.cover,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: individualMeetup.topTrendingMeetup.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/description'); // Navigate to description
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: SizedBox(
+                              width: ScreenSizeConfig.screenWidth * .6,
+                              child: Column(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.asset(
+                                      individualMeetup.topTrendingMeetup.elementAt(index).imageUrl,
+                                      width: double.infinity,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(individualMeetup.topTrendingMeetup.elementAt(index).title, style: TextStyle(fontWeight: FontWeight.bold)),
-                                Text(individualMeetup.topTrendingMeetup.elementAt(index).subTitle),
-                              ],
+                                  const SizedBox(height: 10),
+                                  Text(individualMeetup.topTrendingMeetup.elementAt(index).title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                  Text(individualMeetup.topTrendingMeetup.elementAt(index).subTitle),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
@@ -324,6 +272,61 @@ class MeetupScreenState extends State<MeetupScreen> {
       symbol: '', // No currency symbol
     ).format(number);
     return format;
+  }
+
+  void fetchData() {
+    List<String> slideListImage = [
+      'assets/member_one.jpg',
+      'assets/member_two.jpg',
+      'assets/member_three.jpg',
+      'assets/member_four.jpg',
+      'assets/member_five.jpg',
+      'assets/member_six.jpg',
+    ];
+    List<TrendingPopularPeople> trendingPopularPeople = [
+      TrendingPopularPeople(
+          title: 'Customer',
+          membersCount: 124242,
+          memberListAvatar: [
+            'assets/member_one.jpg',
+            'assets/member_two.jpg',
+            'assets/member_three.jpg',
+            'assets/member_four.jpg',
+          ],
+          memberAvatar: 'assets/member_six.jpg'),
+      TrendingPopularPeople(
+          title: 'Author',
+          membersCount: 1243535242,
+          memberListAvatar: [
+            'assets/image_one.jpg',
+            'assets/image_two.jpg',
+            'assets/image_three.jpg',
+            'assets/member_four.jpg',
+            'assets/member_one.jpg',
+            'assets/member_two.jpg',
+          ],
+          memberAvatar: 'assets/member_two.jpg'),
+      TrendingPopularPeople(
+          title: 'Member',
+          membersCount: 2525,
+          memberListAvatar: [
+            'assets/member_four.jpg',
+            'assets/member_one.jpg',
+            'assets/member_two.jpg',
+            'assets/image_two.jpg',
+            'assets/image_three.jpg',
+          ],
+          memberAvatar: 'assets/member_four.jpg'),
+    ];
+
+    List<TopTrendingMeetup> topTrendingMeetup = [
+      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford Seed', subTitle: 'Meetup 01'),
+      TopTrendingMeetup(imageUrl: 'assets/member_one.jpg', title: 'Stanford Seed', subTitle: 'Meetup 02'),
+      TopTrendingMeetup(imageUrl: 'assets/member_two.jpg', title: 'Stanford Seed', subTitle: 'Meetup 03'),
+      TopTrendingMeetup(imageUrl: 'assets/member_five.jpg', title: 'Stanford Seed', subTitle: 'Meetup 04'),
+      TopTrendingMeetup(imageUrl: 'assets/member_four.jpg', title: 'Stanford Seed', subTitle: 'Meetup 05'),
+    ];
+    individualMeetup = IndividualMeetup(slideList: slideListImage, trendingPopularPeople: trendingPopularPeople, topTrendingMeetup: topTrendingMeetup);
   }
 }
 
@@ -380,7 +383,7 @@ class MeetupScreenState extends State<MeetupScreen> {
 //               CarouselSlider(
 //                 carouselController: CarouselSliderController(),
 //                 options: CarouselOptions(
-//                   height: MediaQuery.sizeOf(context).height * .25,
+//                   height: ScreenSizeConfig.screenHeight * .25,
 //                   enableInfiniteScroll: true,
 //                   animateToClosest: true,
 //                   enlargeCenterPage: true,
@@ -409,8 +412,8 @@ class MeetupScreenState extends State<MeetupScreen> {
 //                         child: Center(
 //                           child: Image.asset(
 //                             item,
-//                             width: MediaQuery.sizeOf(context).width,
-//                             height: MediaQuery.sizeOf(context).height * .25,
+//                             width: ScreenSizeConfig.screenWidth,
+//                             height: ScreenSizeConfig.screenHeight * .25,
 //                             fit: BoxFit.cover,
 //                           ),
 //                         ),
@@ -444,7 +447,7 @@ class MeetupScreenState extends State<MeetupScreen> {
 //                 height: 10,
 //               ),
 //               SizedBox(
-//                 height: MediaQuery.sizeOf(context).height * .25,
+//                 height: ScreenSizeConfig.screenHeight * .25,
 //                 child: ListView.builder(
 //                   scrollDirection: Axis.horizontal,
 //                   itemCount: 5,
@@ -459,7 +462,7 @@ class MeetupScreenState extends State<MeetupScreen> {
 //                             strokeAlign: BorderSide.strokeAlignInside,
 //                           ),
 //                           borderRadius: BorderRadius.circular(10)),
-//                       width: MediaQuery.sizeOf(context).width * .8,
+//                       width: ScreenSizeConfig.screenWidth * .8,
 //                       child: Column(
 //                         mainAxisAlignment: MainAxisAlignment.start,
 //                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -555,7 +558,7 @@ class MeetupScreenState extends State<MeetupScreen> {
 //                         child: ClipRRect(
 //                           borderRadius: BorderRadius.circular(10),
 //                           child: SizedBox(
-//                             width: MediaQuery.sizeOf(context).width * .6,
+//                             width: ScreenSizeConfig.screenWidth * .6,
 //                             child: Column(
 //                               mainAxisAlignment: MainAxisAlignment.start,
 //                               children: [

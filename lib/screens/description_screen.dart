@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart'; // Add this package in pubspec.yaml
 import 'package:flutter/material.dart';
+import 'package:flutter_development_task/screens/full_screen.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../constants/string_constants.dart';
+import '../model/media_query.dar.dart';
 // import 'package:share/share.dart'; // Add the share package for sharing functionality
 
 class DescriptionPage extends StatefulWidget {
@@ -27,6 +29,8 @@ class _DescriptionPageState extends State<DescriptionPage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenSizeConfig.init(context); // Initialize once
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -59,7 +63,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                         CarouselSlider(
                           carouselController: CarouselSliderController(),
                           options: CarouselOptions(
-                            height: MediaQuery.sizeOf(context).height * .35,
+                            height: ScreenSizeConfig.screenHeight * .35,
                             enableInfiniteScroll: true,
                             animateToClosest: true,
                             enlargeCenterPage: true,
@@ -86,11 +90,17 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                 (item) => ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: Center(
-                                    child: Image.asset(
-                                      item,
-                                      width: MediaQuery.sizeOf(context).width,
-                                      height: MediaQuery.sizeOf(context).height * .35,
-                                      fit: BoxFit.cover,
+                                    child: Hero(
+                                      tag: 'hero-image',
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        child: Image.asset(
+                                          item,
+                                          width: ScreenSizeConfig.screenWidth,
+                                          height: ScreenSizeConfig.screenHeight * .35,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -155,6 +165,12 @@ class _DescriptionPageState extends State<DescriptionPage> {
                           icon: const Icon(Icons.fullscreen, size: 28),
                           onPressed: () {
                             // Action for fullscreen button
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullScreen(imagePath: 'assets/image_one.jpg'),
+                              ),
+                            );
                             log('Fullscreen pressed');
                           },
                         ),
