@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,15 +20,6 @@ class MeetupScreenState extends State<MeetupScreen> {
     'assets/image_one.jpg',
     'assets/image_two.jpg',
     'assets/image_three.jpg',
-    'assets/image_one.jpg',
-    'assets/image_two.jpg',
-  ];
-  final List<Color> colors = [
-    Colors.red,
-    Colors.pink,
-    Colors.blue,
-    Colors.orange,
-    Colors.purple,
   ];
 
   @override
@@ -92,7 +85,13 @@ class MeetupScreenState extends State<MeetupScreen> {
                   autoPlay: true,
                   autoPlayInterval: const Duration(seconds: 4),
                   viewportFraction: 1.0,
+                  // onScrolled: (value) {
+                  // log('on scrolled $value');
+                  //   isScrolling = true;
+                  //   setState(() {});
+                  // },
                   onPageChanged: (index, reason) {
+                    log('index: $index and reason $reason');
                     setState(() {
                       _currentIndex = index;
                     });
@@ -189,9 +188,7 @@ class MeetupScreenState extends State<MeetupScreen> {
                                 backgroundColor: Colors.blue,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
-                              onPressed: () {
-                                Navigator.of(context).pushNamed('/description'); // Navigate to description
-                              },
+                              onPressed: () {},
                               child: const Text('See More', style: TextStyle(color: Colors.white)),
                             ),
                           ),
