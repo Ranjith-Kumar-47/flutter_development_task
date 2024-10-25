@@ -2,9 +2,12 @@ import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_development_task/model/individual_meetup_model.dart';
 import 'package:intl/intl.dart';
 
 import '../constants/string_constants.dart';
+import '../model/top_trending_meetup.dart';
+import '../model/trending_popular_people.dart';
 import 'description_screen.dart';
 
 class MeetupScreen extends StatefulWidget {
@@ -16,11 +19,77 @@ class MeetupScreen extends StatefulWidget {
 
 class MeetupScreenState extends State<MeetupScreen> {
   int _currentIndex = 0;
+  late final IndividualMeetup individualMeetup;
   final List<String> imgList = [
     'assets/image_one.jpg',
     'assets/image_two.jpg',
     'assets/image_three.jpg',
+    'assets/image_one.jpg',
+    'assets/image_two.jpg',
+    'assets/image_three.jpg',
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    List<String> slideListImage = [
+      'assets/meetup_one.jpg',
+      'assets/meetup_two.jpg',
+      'assets/member_one.jpg',
+    ];
+    List<TrendingPopularPeople> trendingPopularPeople = [
+      TrendingPopularPeople(
+          title: 'Author',
+          membersCount: 124242,
+          memberListAvatar: [
+            'assets/member_one.jpg',
+            'assets/member_two.jpg',
+            'assets/member_three.jpg',
+            'assets/member_four.jpg',
+          ],
+          memberAvatar: 'assets/member_six.jpg'),
+      TrendingPopularPeople(
+          title: 'Author',
+          membersCount: 124242,
+          memberListAvatar: [
+            'assets/member_one.jpg',
+            'assets/member_two.jpg',
+            'assets/member_three.jpg',
+            'assets/member_four.jpg',
+          ],
+          memberAvatar: 'assets/member_six.jpg'),
+      TrendingPopularPeople(
+          title: 'Author',
+          membersCount: 124242,
+          memberListAvatar: [
+            'assets/member_one.jpg',
+            'assets/member_two.jpg',
+            'assets/member_three.jpg',
+            'assets/member_four.jpg',
+          ],
+          memberAvatar: 'assets/member_six.jpg'),
+      TrendingPopularPeople(
+          title: 'Author',
+          membersCount: 124242,
+          memberListAvatar: [
+            'assets/member_one.jpg',
+            'assets/member_two.jpg',
+            'assets/member_three.jpg',
+            'assets/member_four.jpg',
+          ],
+          memberAvatar: 'assets/member_six.jpg'),
+    ];
+
+    List<TopTrendingMeetup> topTrendingMeetup = [
+      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
+      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
+      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
+      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
+      TopTrendingMeetup(imageUrl: 'assets/member_three.jpg', title: 'Stanford See', subTitle: 'Meetup 01'),
+    ];
+    individualMeetup = IndividualMeetup(slideList: slideListImage, trendingPopularPeople: trendingPopularPeople, topTrendingMeetup: topTrendingMeetup);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +166,7 @@ class MeetupScreenState extends State<MeetupScreen> {
                     });
                   },
                 ),
-                items: imgList
+                items: individualMeetup.slideList
                     .map(
                       (item) => ClipRRect(
                         borderRadius: BorderRadius.circular(14),
@@ -140,7 +209,7 @@ class MeetupScreenState extends State<MeetupScreen> {
                 height: MediaQuery.sizeOf(context).height * .25,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: individualMeetup.trendingPopularPeople.length,
                   itemBuilder: (context, index) {
                     return Container(
                       margin: const EdgeInsets.only(right: 15),
@@ -152,13 +221,13 @@ class MeetupScreenState extends State<MeetupScreen> {
                         children: [
                           Row(
                             children: [
-                              CircleAvatar(backgroundImage: AssetImage(imgList.first)),
+                              CircleAvatar(backgroundImage: AssetImage(individualMeetup.trendingPopularPeople.elementAt(index).memberAvatar)),
                               const SizedBox(width: 10),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("Author"),
-                                  Text('${getFormat(154234)} Meetups'),
+                                  Text(individualMeetup.trendingPopularPeople.elementAt(index).title),
+                                  Text('${getFormat(individualMeetup.trendingPopularPeople.elementAt(index).membersCount)} Meetups'),
                                 ],
                               ),
                             ],
@@ -167,14 +236,15 @@ class MeetupScreenState extends State<MeetupScreen> {
                           SizedBox(
                             height: 50,
                             child: Stack(
-                              children: imgList.asMap().entries.map((entry) {
+                              children: individualMeetup.trendingPopularPeople.elementAt(index).memberListAvatar.asMap().entries.map((entry) {
                                 int index = entry.key;
                                 String imageUrl = entry.value;
                                 return Positioned(
-                                  left: index * 40.0,
+                                  left: index * 40.0, // Adjust spacing as needed
                                   child: CircleAvatar(
                                     radius: 25,
-                                    backgroundImage: AssetImage(imageUrl),
+                                    backgroundImage: AssetImage(imageUrl), // For assets
+                                    // Use `NetworkImage(imageUrl)` instead if the images are from the internet
                                   ),
                                 );
                               }).toList(),
@@ -205,7 +275,7 @@ class MeetupScreenState extends State<MeetupScreen> {
                 height: 280,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: individualMeetup.topTrendingMeetup.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
@@ -222,15 +292,15 @@ class MeetupScreenState extends State<MeetupScreen> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.asset(
-                                    imgList.first,
+                                    individualMeetup.topTrendingMeetup.elementAt(index).imageUrl,
                                     width: double.infinity,
                                     height: 200,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                const Text('Stanford Seed', style: TextStyle(fontWeight: FontWeight.bold)),
-                                const Text('Meetup 01'),
+                                Text(individualMeetup.topTrendingMeetup.elementAt(index).title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                Text(individualMeetup.topTrendingMeetup.elementAt(index).subTitle),
                               ],
                             ),
                           ),

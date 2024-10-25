@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_development_task/constants/string_constants.dart';
 import 'package:flutter_development_task/global_fun.dart';
-import 'package:flutter_development_task/screens/meetup_screen.dart';
+import 'package:flutter_development_task/screens/dashboard_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LoginPage extends StatefulWidget {
@@ -154,7 +154,7 @@ class LoginPageState extends State<LoginPage> {
                           ToastMessage.showToastMessage('${StringConstants.loginSuccess}!!');
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return MeetupScreen();
+                              return DashboardPage();
                             },
                           ));
                         }
