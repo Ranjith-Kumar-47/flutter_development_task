@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart'; // Add this package in pubspec.yaml
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../constants/string_constants.dart';
 // import 'package:share/share.dart'; // Add the share package for sharing functionality
 
 class DescriptionPage extends StatefulWidget {
@@ -11,6 +16,7 @@ class DescriptionPage extends StatefulWidget {
 class _DescriptionPageState extends State<DescriptionPage> {
   int _currentIndex = 0;
   bool isScrolling = false;
+  double scrollValue = 1000;
   bool moreDetails = false;
   final List<String> imgList = [
     // 'https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
@@ -22,14 +28,16 @@ class _DescriptionPageState extends State<DescriptionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Description'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            // Go back action
-          },
+        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.white,
+        title: const Text(
+          StringConstants.descriptionTitle,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -37,11 +45,10 @@ class _DescriptionPageState extends State<DescriptionPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image Carousel
               Container(
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20), bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
-                  color: Colors.grey,
+                  color: /*isScrolling ? Colors.white : */ Color(0xffD3D3D3),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -54,20 +61,21 @@ class _DescriptionPageState extends State<DescriptionPage> {
                           options: CarouselOptions(
                             height: MediaQuery.sizeOf(context).height * .35,
                             enableInfiniteScroll: true,
-                            animateToClosest: false,
-                            enlargeCenterPage: false,
+                            animateToClosest: true,
+                            enlargeCenterPage: true,
                             pageSnapping: true,
                             reverse: false,
-                            // onScrolled: (value) {
-                            //   log('on scrolled...');
-                            //   isScrolling = !isScrolling;
-                            //   setState(() {});
-                            // },
+                            scrollPhysics: const BouncingScrollPhysics(decelerationRate: ScrollDecelerationRate.normal),
                             autoPlay: false,
                             autoPlayInterval: const Duration(seconds: 4),
                             viewportFraction: 1.0,
-                            // onScrolled: (value) => isScrolling = !isScrolling,
+                            // onScrolled: (value) {
+                            // log('on scrolled $value');
+                            //   isScrolling = true;
+                            //   setState(() {});
+                            // },
                             onPageChanged: (index, reason) {
+                              log('index: $index and reason $reason');
                               setState(() {
                                 _currentIndex = index;
                               });
@@ -76,7 +84,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                           items: imgList
                               .map(
                                 (item) => ClipRRect(
-                                  borderRadius: BorderRadius.circular(isScrolling ? 0 : 20),
+                                  borderRadius: BorderRadius.circular(20),
                                   child: Center(
                                     child: Image.asset(
                                       item,
@@ -117,7 +125,6 @@ class _DescriptionPageState extends State<DescriptionPage> {
                             }).toList(),
                           ),
                         ),
-                        // Share icon
                       ],
                     ),
                     Row(
@@ -127,42 +134,45 @@ class _DescriptionPageState extends State<DescriptionPage> {
                           icon: const Icon(Icons.file_download_outlined),
                           onPressed: () {
                             // Action for download button
-                            print('Download pressed');
+                            log('Download pressed');
                           },
                         ),
                         IconButton(
                           icon: const Icon(Icons.bookmark_border_rounded),
                           onPressed: () {
                             // Action for bookmark button
-                            print('Bookmark pressed');
+                            log('Bookmark pressed');
                           },
                         ),
                         IconButton(
                           icon: const Icon(Icons.favorite_border_rounded),
                           onPressed: () {
                             // Action for favorite button
-                            print('Favorite pressed');
+                            log('Favorite pressed');
                           },
                         ),
                         IconButton(
                           icon: const Icon(Icons.fullscreen, size: 28),
                           onPressed: () {
                             // Action for fullscreen button
-                            print('Fullscreen pressed');
+                            log('Fullscreen pressed');
                           },
                         ),
                         IconButton(
                           icon: const Icon(Icons.star_border_purple500_sharp),
                           onPressed: () {
                             // Action for star button
-                            print('Star pressed');
+                            log('Star pressed');
                           },
                         ),
                         IconButton(
                           icon: const Icon(Icons.share_outlined),
                           onPressed: () {
-                            // Action for share button
-                            print('Share pressed');
+                            Share.share(
+                              'Check out this share option',
+                              subject: 'Flutter Development Task',
+                            );
+                            log('Share pressed');
                           },
                         ),
                       ],
@@ -293,18 +303,6 @@ class _DescriptionPageState extends State<DescriptionPage> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Project'),
-          BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Meetup'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
-        ],
-        currentIndex: 2, // Set active tab (Meetup in this case)
-        selectedItemColor: Colors.teal,
-        unselectedItemColor: Colors.grey,
       ),
     );
   }

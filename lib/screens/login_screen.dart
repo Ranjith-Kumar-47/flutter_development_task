@@ -3,16 +3,23 @@ import 'dart:developer';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_development_task/constants/string_constants.dart';
+import 'package:flutter_development_task/global_fun.dart';
+import 'package:flutter_development_task/screens/meetup_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool isChecked = false;
+  bool isObscureText = true;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -26,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         forceMaterialTransparency: true,
         backgroundColor: Colors.white,
         title: const Text(
-          "promilo",
+          StringConstants.promilo,
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
@@ -45,12 +52,12 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     const SizedBox(height: 25),
                     const Text(
-                      "Hi, Welcome Back!",
+                      StringConstants.greeting,
                       style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 30),
-                    const Text('   Please Sign in to Continue'),
+                    const Text(StringConstants.signIn),
                     const SizedBox(height: 4),
                     TextFormField(
                       validator: (value) {
@@ -58,18 +65,19 @@ class _LoginPageState extends State<LoginPage> {
                           RegExp mobileNoRegex = RegExp(r'^\d{10}');
                           if (mobileNoRegex.hasMatch(value)) {
                             log('mobile number entered...');
-                            return 'Please enter Email to validate';
-                          } else if (EmailValidator.validate(value) && value.contains('test@stanch.io')) {
+                            return StringConstants.mobileNoEmailValidation;
+                          } else if (EmailValidator.validate(value) && value.contains(StringConstants.emailId)) {
                             return null;
                           } else {
-                            return 'Please enter valid Email or Mob No';
+                            return StringConstants.wrongEmailValidation;
                           }
                         }
-                        return "Please enter valid Email or Mob No";
+                        return StringConstants.wrongEmailValidation;
                       },
                       controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
-                        labelText: "Enter Email or Mob No.",
+                        hintText: StringConstants.emailHint,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
@@ -78,29 +86,37 @@ class _LoginPageState extends State<LoginPage> {
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
                         onTap: () {
-                          // Sign in with OTP action
+                          ToastMessage.showToastMessage('${StringConstants.singInWithOtp}!!');
                         },
                         child: const Text(
-                          "Sign In With OTP",
+                          StringConstants.singInWithOtp,
                           style: TextStyle(color: Colors.blue),
                         ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Text('   Password'),
+                    const Text(StringConstants.passwordText),
                     const SizedBox(height: 4),
                     TextFormField(
                       validator: (value) {
-                        if (value != null && value.isNotEmpty && value.contains('Test@123')) {
+                        if (value != null && value.isNotEmpty && value.contains(StringConstants.password)) {
                           return null;
                         }
-                        return "Please enter valid password";
+                        return StringConstants.wrongPasswordValidation;
                       },
                       controller: passwordController,
-                      obscureText: true,
+                      obscureText: isObscureText,
+                      keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
-                        hintText: null,
-                        labelText: "Enter Password",
+                        hintText: StringConstants.passwordHint,
+                        suffixIcon: IconButton(
+                          icon: Icon(isObscureText ? Icons.visibility_off_rounded : Icons.visibility_rounded),
+                          onPressed: () {
+                            log('visibility clicked...');
+                            isObscureText = !isObscureText;
+                            setState(() {});
+                          },
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -111,16 +127,21 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         Row(
                           children: [
-                            Checkbox(value: false, onChanged: (bool? value) {}),
-                            const Text("Remember Me"),
+                            Checkbox(
+                                value: isChecked,
+                                onChanged: (bool? value) {
+                                  isChecked = value!;
+                                  setState(() {});
+                                }),
+                            const Text(StringConstants.rememberMe),
                           ],
                         ),
                         GestureDetector(
                           onTap: () {
-                            // Forget password action
+                            ToastMessage.showToastMessage('${StringConstants.forgetPassword}!!');
                           },
                           child: const Text(
-                            "Forget Password",
+                            StringConstants.forgetPassword,
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),
@@ -129,9 +150,13 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // Submit action
                         if (_formKey.currentState!.validate()) {
-                          log('login success');
+                          ToastMessage.showToastMessage('${StringConstants.loginSuccess}!!');
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return MeetupScreen();
+                            },
+                          ));
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -148,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                         textStyle: const TextStyle(fontSize: 18),
                       ),
                       child: const Text(
-                        "Submit",
+                        StringConstants.submit,
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -176,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         IconButton(
                           icon: SvgPicture.asset(
-                            'assets/svg/google_icon.svg',
+                            StringConstants.googleIcon,
                             width: 30,
                             height: 30,
                           ),
@@ -184,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
-                            'assets/svg/linkedin_icon.svg',
+                            StringConstants.linkedInIcon,
                             width: 30,
                             color: const Color(0xff0073B1),
                             height: 30,
@@ -193,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
-                            'assets/svg/facebook_icon.svg',
+                            StringConstants.facebookIcon,
                             width: 30,
                             height: 30,
                           ),
@@ -201,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
-                            'assets/svg/instagram_icon.svg',
+                            StringConstants.instagramIcon,
                             width: 30,
                             height: 30,
                           ),
@@ -209,7 +234,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
-                            'assets/svg/whatsapp_icon.svg',
+                            StringConstants.whatsappIcon,
                             width: 30,
                             height: 30,
                           ),
@@ -222,12 +247,12 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Business User?",
+                          StringConstants.businessUser,
                           style: TextStyle(fontSize: 16),
                         ),
                         Spacer(),
                         Text(
-                          "Don't have an Account",
+                          StringConstants.dontHaveAccount,
                           style: TextStyle(fontSize: 16),
                         )
                       ],
@@ -236,16 +261,20 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              ToastMessage.showToastMessage('${StringConstants.loginHere}!!');
+                            },
                             child: const Text(
-                              "Login Here",
+                              StringConstants.loginHere,
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
                             )),
                         const Spacer(),
                         GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              ToastMessage.showToastMessage('${StringConstants.signUp}!!');
+                            },
                             child: const Text(
-                              "Sign Up",
+                              StringConstants.signUp,
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
                             )),
                       ],
@@ -256,25 +285,15 @@ class _LoginPageState extends State<LoginPage> {
                       child: RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
-                          text: 'By continuing, you agree to ',
-                          style: const TextStyle(color: Colors.grey, fontSize: 12), // Default text style
+                          text: StringConstants.agree,
+                          style: const TextStyle(color: Colors.grey, fontSize: 12),
                           children: <TextSpan>[
                             TextSpan(
-                              text: 'Promilo\'s',
-                              style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  // Handle Terms of Use click
-                                  print('Terms of Use clicked');
-                                },
-                            ),
-                            TextSpan(
-                              text: '\nTerms of Use',
+                              text: '\n${StringConstants.terms}',
                               style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  // Handle Terms of Use click
-                                  print('Terms of Use clicked');
+                                  ToastMessage.showToastMessage('${StringConstants.terms}!!');
                                 },
                             ),
                             const TextSpan(
@@ -282,12 +301,11 @@ class _LoginPageState extends State<LoginPage> {
                               style: TextStyle(color: Colors.grey),
                             ),
                             TextSpan(
-                              text: 'Privacy Policy',
+                              text: StringConstants.privacy,
                               style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  // Handle Privacy Policy click
-                                  print('Privacy Policy clicked');
+                                  ToastMessage.showToastMessage('${StringConstants.privacy}!!');
                                 },
                             ),
                             const TextSpan(
