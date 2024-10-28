@@ -6,36 +6,27 @@ import 'package:flutter_development_task/screens/meetup_screen.dart';
 import 'package:flutter_development_task/screens/project_screen.dart';
 
 class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key});
+
   @override
-  _DashboardPageState createState() => _DashboardPageState();
+  _DashboardState createState() => _DashboardState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
-  int _selectedIndex = 2;
-  String _selectedPage = 'Individual Meetup';
-
-  // List of pages to display for each BottomNavigationBar item
-  static List<Widget> _pages = <Widget>[
-    const HomeScreen(),
-    const ProjectScreen(),
-    const MeetupScreen(),
-    const ExploreScreen(),
-    const AccountScreen(),
+class _DashboardState extends State<DashboardPage> {
+  int _currentIndex = 2;
+  final List<Widget> _pages = [
+    const NavigatorPage(child: HomeScreen()),
+    const NavigatorPage(child: ProjectScreen()),
+    const NavigatorPage(child: MeetupScreen()),
+    const NavigatorPage(child: ExploreScreen()),
+    const NavigatorPage(child: AccountScreen()),
   ];
-  static List<String> _pageeName = <String>["Home", "Project", "Individual Meetup", "Explore", "Account"];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      _selectedPage = _pageeName.elementAt(index);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        index: _selectedIndex, // Display the selected page
+        index: _currentIndex,
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -49,12 +40,29 @@ class _DashboardPageState extends State<DashboardPage> {
           BottomNavigationBarItem(icon: Icon(Icons.plagiarism_outlined), label: 'Explore'),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Account'),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: _currentIndex,
         // Current selected index
         selectedItemColor: Colors.teal,
         unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped, // Handle index changes
+        onTap: (index) => setState(() => _currentIndex = index), // Handle index changes
       ),
+    );
+  }
+}
+
+class NavigatorPage extends StatelessWidget {
+  final Widget child;
+
+  const NavigatorPage({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute(
+          builder: (context) => child,
+        );
+      },
     );
   }
 }

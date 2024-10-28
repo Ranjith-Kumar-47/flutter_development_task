@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart'; // Add this package in pubspec.yaml
 import 'package:flutter/material.dart';
+import 'package:flutter_development_task/global_fun.dart';
+import 'package:flutter_development_task/model/description.dart';
 import 'package:flutter_development_task/screens/full_screen.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:share_plus/share_plus.dart';
@@ -11,6 +13,10 @@ import '../model/media_query.dar.dart';
 // import 'package:share/share.dart'; // Add the share package for sharing functionality
 
 class DescriptionPage extends StatefulWidget {
+  Description description;
+
+  DescriptionPage({super.key, required this.description});
+
   @override
   _DescriptionPageState createState() => _DescriptionPageState();
 }
@@ -20,12 +26,6 @@ class _DescriptionPageState extends State<DescriptionPage> {
   bool isScrolling = false;
   double scrollValue = 1000;
   bool moreDetails = false;
-  final List<String> imgList = [
-    // 'https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    'assets/image_one.jpg',
-    'assets/image_two.jpg',
-    'assets/image_three.jpg',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -80,10 +80,11 @@ class _DescriptionPageState extends State<DescriptionPage> {
                               log('index: $index and reason $reason');
                               setState(() {
                                 _currentIndex = index;
+                                log('current index changed: ${_currentIndex}');
                               });
                             },
                           ),
-                          items: imgList
+                          items: widget.description.imageList
                               .map(
                                 (item) => ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
@@ -112,7 +113,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                           right: 0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: imgList.asMap().entries.map((entry) {
+                            children: widget.description.imageList.asMap().entries.map((entry) {
                               return GestureDetector(
                                 onTap: () => setState(() {
                                   _currentIndex = entry.key;
@@ -139,23 +140,43 @@ class _DescriptionPageState extends State<DescriptionPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.file_download_outlined),
+                          icon: Icon(
+                            Icons.file_download_outlined,
+                            color: widget.description.isDownloaded ? Colors.blue : Colors.black,
+                          ),
                           onPressed: () {
                             // Action for download button
+                            widget.description = widget.description.copyWith(isDownloaded: !widget.description.isDownloaded);
+                            ToastMessage.showToastMessage('download success!!');
+                            setState(() {});
+                            log('isDownloaded: ${widget.description.isDownloaded}');
                             log('Download pressed');
                           },
                         ),
                         IconButton(
-                          icon: const Icon(Icons.bookmark_border_rounded),
+                          icon: Icon(
+                            widget.description.isSaved ? Icons.bookmark : Icons.bookmark_border_rounded,
+                            color: widget.description.isSaved ? Colors.blue : Colors.black,
+                          ),
                           onPressed: () {
-                            // Action for bookmark button
+                            // Action for download button
+                            widget.description = widget.description.copyWith(isSaved: !widget.description.isSaved);
+                            ToastMessage.showToastMessage('save success!!');
+                            setState(() {});
+                            log('isSaved: ${widget.description.isSaved}');
                             log('Bookmark pressed');
                           },
                         ),
                         IconButton(
-                          icon: const Icon(Icons.favorite_border_rounded),
+                          icon: Icon(
+                            widget.description.isFavorite ? Icons.favorite : Icons.favorite_border_rounded,
+                            color: widget.description.isFavorite ? Colors.blue : Colors.black,
+                          ),
                           onPressed: () {
-                            // Action for favorite button
+                            widget.description = widget.description.copyWith(isFavorite: !widget.description.isFavorite);
+                            ToastMessage.showToastMessage('added to favorite!!');
+                            setState(() {});
+                            log('isFavorite: ${widget.description.isFavorite}');
                             log('Favorite pressed');
                           },
                         ),
@@ -166,15 +187,22 @@ class _DescriptionPageState extends State<DescriptionPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => FullScreen(imagePath: 'assets/image_one.jpg'),
+                                builder: (context) => FullScreen(imagePaths: widget.description.imageList),
                               ),
                             );
                             log('Fullscreen pressed');
                           },
                         ),
                         IconButton(
-                          icon: const Icon(Icons.star_border_purple500_sharp),
+                          icon: Icon(
+                            widget.description.isStared ? Icons.star : Icons.star_border_purple500_sharp,
+                            color: widget.description.isStared ? Colors.blue : Colors.black,
+                          ),
                           onPressed: () {
+                            widget.description = widget.description.copyWith(isStared: !widget.description.isStared);
+                            ToastMessage.showToastMessage('star success!!');
+                            setState(() {});
+                            log('star: ${widget.description.isDownloaded}');
                             // Action for star button
                             log('Star pressed');
                           },
@@ -199,21 +227,21 @@ class _DescriptionPageState extends State<DescriptionPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(Icons.bookmark_border_rounded),
                       SizedBox(width: 5),
-                      Text('1034'),
+                      Text('${widget.description.saveCount}'),
                     ],
                   ),
                   const SizedBox(
                     width: 10,
                   ),
-                  const Row(
+                  Row(
                     children: [
                       Icon(Icons.favorite_border_rounded),
                       SizedBox(width: 5),
-                      Text('1034'),
+                      Text('${widget.description.favoriteCount}'),
                     ],
                   ),
                   const SizedBox(
@@ -227,7 +255,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                         child: RatingBar.builder(
                           ignoreGestures: true,
                           itemSize: 16,
-                          initialRating: 3.6,
+                          initialRating: widget.description.rating,
                           minRating: 1,
                           direction: Axis.horizontal,
                           allowHalfRating: true,
@@ -241,8 +269,8 @@ class _DescriptionPageState extends State<DescriptionPage> {
                         ),
                       ),
                       const SizedBox(width: 5),
-                      const Text(
-                        '3.2',
+                      Text(
+                        '${widget.description.rating}',
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -255,27 +283,27 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 'Actor Name',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const Text('Indian Actress'),
+              Text('${widget.description.actorName}'),
               const SizedBox(height: 10),
-              const Row(
+              Row(
                 children: [
                   Icon(
                     Icons.access_time,
                     size: 20,
                   ),
                   SizedBox(width: 5),
-                  Text('Duration 20 Mins'),
+                  Text('Duration ${widget.description.durationTime}'),
                 ],
               ),
               const SizedBox(height: 5),
-              const Row(
+              Row(
                 children: [
                   Icon(
                     Icons.account_balance_wallet_outlined,
                     size: 20,
                   ),
                   SizedBox(width: 5),
-                  Text('Total Average Fees ₹9,999'),
+                  Text('Total Average Fees ₹${widget.description.totalAvgFees}'),
                 ],
               ),
               const SizedBox(height: 20),
@@ -289,28 +317,32 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'In the game\'s crucial moments, KD thrives. He takes over on both ends of the court, '
-                          'making defenders fear his unstoppable moves. ${moreDetails ? 'He\'s a proven champion with multiple places with more option ' : ''}',
+                      text: widget.description.about.length > 300
+                          ? moreDetails
+                              ? widget.description.about
+                              : widget.description.about.substring(0, 300)
+                          : widget.description.about,
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey[700],
                       ),
                     ),
-                    WidgetSpan(
-                      child: GestureDetector(
-                        onTap: () {
-                          moreDetails = !moreDetails;
-                          setState(() {});
-                        },
-                        child: Text(
-                          moreDetails ? "Less" : 'More',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue,
+                    if (widget.description.about.length > 300)
+                      WidgetSpan(
+                        child: GestureDetector(
+                          onTap: () {
+                            moreDetails = !moreDetails;
+                            setState(() {});
+                          },
+                          child: Text(
+                            moreDetails ? " less" : ' more',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.blue,
+                            ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),

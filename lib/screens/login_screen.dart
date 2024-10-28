@@ -154,7 +154,7 @@ class LoginPageState extends State<LoginPage> {
                           ToastMessage.showToastMessage('${StringConstants.loginSuccess}!!');
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return DashboardPage();
+                              return const DashboardPage();
                             },
                           ));
                         }
@@ -205,7 +205,9 @@ class LoginPageState extends State<LoginPage> {
                             width: 30,
                             height: 30,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            ToastMessage.showToastMessage(StringConstants.googleLoign);
+                          },
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
@@ -214,7 +216,9 @@ class LoginPageState extends State<LoginPage> {
                             color: const Color(0xff0073B1),
                             height: 30,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            ToastMessage.showToastMessage(StringConstants.linkedInLogin);
+                          },
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
@@ -222,7 +226,9 @@ class LoginPageState extends State<LoginPage> {
                             width: 30,
                             height: 30,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            ToastMessage.showToastMessage(StringConstants.facebookLogin);
+                          },
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
@@ -230,7 +236,9 @@ class LoginPageState extends State<LoginPage> {
                             width: 30,
                             height: 30,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            ToastMessage.showToastMessage(StringConstants.instagramLogin);
+                          },
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
@@ -238,7 +246,9 @@ class LoginPageState extends State<LoginPage> {
                             width: 30,
                             height: 30,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            ToastMessage.showToastMessage(StringConstants.whatsappLogin);
+                          },
                         ),
                       ],
                     ),

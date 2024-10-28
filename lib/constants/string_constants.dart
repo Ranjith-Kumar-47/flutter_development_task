@@ -1,6 +1,7 @@
 class StringConstants {
   static const String emailId = 'test@stanch.io';
   static const String password = 'Test@123';
+
   //sign in with otp
   static const String singInWithOtp = 'Sign In with OTP';
   static const String passwordText = '   Password';
@@ -9,6 +10,7 @@ class StringConstants {
   static const String individualMeetupTitle = 'Individual Meetup';
   static const String exploreTitle = 'Explore';
   static const String projectTitle = 'Project';
+  static const String voiceSearch = 'Voice Search';
   static const String homeTitle = 'Home';
   static const String accountTitle = 'Account';
   static const String greeting = 'Hi, Welcome Back!';
@@ -16,6 +18,7 @@ class StringConstants {
   static const String emailHint = 'Enter Email or Mob No.';
   static const String passwordHint = 'Enter Password';
   static const String rememberMe = 'Remeber Me';
+  static const String seeMore = 'See More';
   static const String forgetPassword = 'Forget Password';
   static const String submit = 'Submit';
   static const String googleLoign = 'Google Login!!';
